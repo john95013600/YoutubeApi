@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Download Video Example</title>
+	<style type="text/css">.inp{width: 350px;} #forresult,#result{margin-top: 20px; overflow: auto;}.author{color: #999;text-align: right;}</style>
+	<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+	<script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+	<script>
+
+		$(function(){
+
+
+
+		// 取得影片
+		$('#btn_get').click(function(event) {
+			var url = $('#url').val(),
+			res = $('#result'),
+			rrr = $('#forresult');
+			// $.getJSON('getvideo.php', {url: url }, function(json, textStatus) { 
+			// 	console.log(json);
+			// });
+			rrr.html('');
+			if(url!=""){
+				res.html("取得中...");
+
+				$.ajax({
+					url: 'getvideo.php',
+					type: 'get',
+					dataType: 'text',
+					data: {url: url},
+				})
+				.done(function (data) {
+					console.log(data);
+					res.html(data);
+					var obj = $.parseJSON(data);
+					var htmlurl ='';
+					$.each(obj, function(index, val) {
+						htmlurl+="<a href="+val.source+">載點 (檔案名稱 : "+val.title+" 格式 : "+val.type+" 畫質 : "+val.quality+" )</a><br>";
+					});
+					// console.log(htmlurl);
+					rrr.html(htmlurl);
+				});
+			}
+		});
+	});
+
+	</script>
+</head>
+<body>
+	
+	<h1>取得Youtube影片下載路徑</h1>
+	<hr>
+	<h2>展示</h2>
+	<div>輸入youtube網址：<input type="text" id="url" class="inp"><button id="btn_get">取得</button></div>
+	<div id="forresult"></div>
+	<hr>
+	<h2>API 說明</h2>
+	<p>輸入一個正確的 youtube 影片網址，可以取得該影片下載資源的 json 格式資料<br>
+		格式如下:<br>
+		[<br>{ type : 影片的content type , quality : 影片的畫質 , source : 影片資源的URI },<br>
+		{以此類推...},<br>
+		{以此類推...}<br>]<br>
+	</p>
+	<h3>實際JSON</h3>
+	<div id="result">**請先輸入 youtube 網址</div><br>
+	<hr>
+	<h2>如何使用</h2>
+	<p>若已載入 jQuery 函式庫，可以使用以下語法，取的json結果</p>
+	<p>$.getJSON('getvideo.php', {url: 'YouTube網址' }, function(json, textStatus) { <br>
+		console.log(json);<br>
+	});<br><br></p>
+
+	<p>getvideo.php 這隻後端解析 YouTube URL 程式原始碼公開在我的 <a href="http://10.10.59.238/youtube/ytb.txt" target="_blank">點我</a><br></p>
+
+	<br><br>
+	<p class="author">Design by <a href="https://github.com/LinZap" target="_blank">Zap</a></p>
+	<img src="http://fc09.deviantart.net/fs70/i/2013/120/6/d/rain_by_tuyetdinhsinhvat-d63lnld.jpg" style="display:none">
+</body>
+</html>
